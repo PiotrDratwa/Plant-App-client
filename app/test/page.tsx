@@ -1,30 +1,34 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { GetPresets } from '../api/api'
+import { GetPlants } from '../api/api'
 
-function Presets() {
-  const [presets, setPresets] = useState<any[]>([])
+function Test() {
+  const [plants, setPlants] = useState<any[]>([])
 
   useEffect(() => {
-    const fetchPresets = async () => {
-      const data = await GetPresets()
-      console.log('RAW DATA:', data)
-
-      if (data?.recordset) {
-        setPresets(data.recordset) // ⬅️ TO JEST KLUCZ
+    const fetchPlants = async () => {
+      const data = await GetPlants(1)
+      const userId = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('userID='))
+      ?.split('=')[1]
+      
+      console.log('userID:', userId)
+      console.log("data",data)
+      if (data) {
+        setPlants(data.recordsets[0])
       }
     }
-
-    fetchPresets()
+    fetchPlants()
   }, [])
 
   return (
     <div>
-      {presets.map((preset) => (
-        <p key={preset.Id}>{preset.NamePreset} {preset.Temp}</p>
+      {plants.map((plant) => (
+        <p key={plant.Id}>{plant.NamePlant}</p>
       ))}
     </div>
   )
 }
 
-export default Presets
+export default Test

@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import Navbar from "./components/Navbar"
 import { redirect } from "next/navigation";
 import './globals.css';
+import { PlantProvider } from './context/PlantContext'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar/>
-        {children}
+        <PlantProvider>{children}</PlantProvider>
       </body>
     </html>
   );
