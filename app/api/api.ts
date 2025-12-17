@@ -8,11 +8,11 @@ export async function handleLogin(UserName: string, Password: string){
         headers: {
             'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
             UserName: UserName,
             PasswordHash: Password,
         }),
-        credentials: 'include'
         });
 
         if (!res.ok) {
@@ -58,28 +58,241 @@ export async function GetPlants(UserId: number) {
   }
 }
 
-export async function PostPlants(UserId: number) {
-  const API_URL = 'http://localhost:3000'
-
+export async function handleRegister(UserName: string, Password: string) {
+  const API_URL = 'http://localhost:3000';
   try {
-    const res = await fetch(`${API_URL}/plants?UserId=${UserId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const res = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        UserName,
+        PasswordHash: Password,
+      }),
+    });
 
     if (!res.ok) {
-      console.log('Błąd pobierania roślin')
-      return
+      console.log('Błąd rejestracji');
+      return null;
     }
 
-    const data = await res.json()
-    console.log(data.recordsets)
-    return data
-
+    return await res.json();
   } catch (err) {
-    console.log('Błąd połączenia')
-    console.log(err)
+    console.error(err);
+  }
+}
+
+export async function PostPlants(
+  UserId: number,
+  NamePlant: string,
+  PresetId: number
+) {
+    const API_URL = 'http://localhost:3000';
+  try {
+    const res = await fetch(`${API_URL}/plants`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        UserId,
+        NamePlant,
+        PresetId,
+      }),
+    });
+
+    if (!res.ok) {
+      console.log('Błąd dodawania rośliny');
+      return null;
+    }
+
+    return await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function UpdatePlant(
+  PlantId: number,
+  UserId: number,
+  NamePlant: string,
+  PresetId: number
+) {
+    const API_URL = 'http://localhost:3000';
+  try {
+    const res = await fetch(`${API_URL}/plants`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        PlantId,
+        UserId,
+        NamePlant,
+        PresetId,
+      }),
+    });
+
+    if (!res.ok) {
+      console.log('Błąd edycji rośliny');
+      return null;
+    }
+
+    return await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function DeletePlant(UserId: number, NamePlant: string) {
+  try {
+    const API_URL = 'http://localhost:3000';
+    const res = await fetch(`${API_URL}/plants`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        UserId,
+        NamePlant,
+      }),
+    });
+
+    if (!res.ok) {
+      console.log('Błąd usuwania rośliny');
+      return null;
+    }
+
+    return await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+export async function GetPresets() {
+  try {
+    const API_URL = 'http://localhost:3000';
+    const res = await fetch(`${API_URL}/preset`);
+
+    if (!res.ok) {
+      console.log('Błąd pobierania presetów');
+      return null;
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function PostPreset(
+  NamePreset: string,
+  Temp: number,
+  Moist: number,
+  AirQuality: number,
+  UserId: number
+) {
+  try {
+    const API_URL = 'http://localhost:3000';
+    const res = await fetch(`${API_URL}/preset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        NamePreset,
+        Temp,
+        Moist,
+        AirQuality,
+        UserId,
+      }),
+    });
+
+    if (!res.ok) {
+      console.log('Błąd dodawania presetu');
+      return null;
+    }
+
+    return await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function UpdatePreset(
+  Id: number,
+  NamePreset: string,
+  Temp: number,
+  Moist: number,
+  AirQuality: number
+) {
+    const API_URL = 'http://localhost:3000';
+  try {
+    const res = await fetch(`${API_URL}/preset`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        Id,
+        NamePreset,
+        Temp,
+        Moist,
+        AirQuality,
+      }),
+    });
+
+    if (!res.ok) {
+      console.log('Błąd edycji presetu');
+      return null;
+    }
+
+    return await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+export async function DeletePreset(Id: number) {
+    const API_URL = 'http://localhost:3000';
+  try {
+    const res = await fetch(`${API_URL}/preset`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Id }),
+    });
+
+    if (!res.ok) {
+      console.log('Błąd usuwania presetu');
+      return null;
+    }
+
+    return await res.text();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+export async function GetHistory(PlantId: number) {
+    const API_URL = 'http://localhost:3000';
+  try {
+    const res = await fetch(`${API_URL}/history?PlantId=${PlantId}`);
+
+    if (!res.ok) {
+      console.log('Błąd pobierania historii');
+      return null;
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+export async function GetTest() {
+    const API_URL = 'http://localhost:3000';
+  try {
+    const res = await fetch(`${API_URL}/test`);
+
+    if (!res.ok) {
+      console.log('Błąd testu');
+      return null;
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error(err);
   }
 }

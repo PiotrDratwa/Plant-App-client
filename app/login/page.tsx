@@ -9,7 +9,6 @@ function Login() {
   const router = useRouter();
 
   const onSubmit = async (e: React.FormEvent) => {
-    console.log("Submitting login form")
     e.preventDefault();
     const success = await handleLogin(userName, password);
     if (success) router.push('/');

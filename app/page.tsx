@@ -119,9 +119,11 @@ export default function Home() {
 
 
 //TODO
-//rejestracja od front endu
 //opcja dodawania rośliny
-//zakładka zarządzania użytkownikami
 //udynamizowanie danych z frontendu danymi z backendu
+//dodaj zmianę pola interval
+//dodaj przycisk podlewania 
 
+//rejestracja od front endu
+//zakładka zarządzania użytkownikami
 //mobilny widok
