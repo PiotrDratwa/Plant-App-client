@@ -4,6 +4,7 @@ import { createContext, useContext, useState } from 'react'
 interface Plant {
   id: number
   name: string
+  presetId?: number
 }
 
 interface PlantContextType {

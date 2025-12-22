@@ -84,7 +84,7 @@ export async function handleRegister(UserName: string, Password: string) {
 export async function PostPlants(
   UserId: number,
   NamePlant: string,
-  PresetId: number
+  PresetId?: number
 ) {
     const API_URL = 'http://localhost:3000';
   try {
@@ -97,7 +97,7 @@ export async function PostPlants(
         PresetId,
       }),
     });
-
+    console.log("response", res);
     if (!res.ok) {
       console.log('Błąd dodawania rośliny');
       return null;
@@ -110,10 +110,8 @@ export async function PostPlants(
 }
 
 export async function UpdatePlant(
-  PlantId: number,
   UserId: number,
   NamePlant: string,
-  PresetId: number
 ) {
     const API_URL = 'http://localhost:3000';
   try {
@@ -121,10 +119,8 @@ export async function UpdatePlant(
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        PlantId,
         UserId,
         NamePlant,
-        PresetId,
       }),
     });
 
@@ -139,14 +135,14 @@ export async function UpdatePlant(
   }
 }
 
-export async function DeletePlant(UserId: number, NamePlant: string) {
+export async function DeletePlant(Id: number, NamePlant: string) {
   try {
     const API_URL = 'http://localhost:3000';
     const res = await fetch(`${API_URL}/plants`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        UserId,
+        Id,
         NamePlant,
       }),
     });
@@ -163,10 +159,12 @@ export async function DeletePlant(UserId: number, NamePlant: string) {
 }
 
 
-export async function GetPresets() {
+export async function GetPresets(Id: number) {
   try {
     const API_URL = 'http://localhost:3000';
-    const res = await fetch(`${API_URL}/preset`);
+    const res = await fetch(`${API_URL}/preset?Id=${Id}`, {
+      method: 'GET',
+    });
 
     if (!res.ok) {
       console.log('Błąd pobierania presetów');
@@ -176,6 +174,7 @@ export async function GetPresets() {
     return await res.json();
   } catch (err) {
     console.error(err);
+    return null;
   }
 }
 
@@ -205,7 +204,8 @@ export async function PostPreset(
       return null;
     }
 
-    return await res.text();
+    const data = await res.json();
+    return data.id;
   } catch (err) {
     console.error(err);
   }

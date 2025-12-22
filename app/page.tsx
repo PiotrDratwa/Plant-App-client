@@ -6,15 +6,23 @@ import { FaTemperatureQuarter,FaSun } from "react-icons/fa6";
 import Link from 'next/link'
 import { FaCheck } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { GetHistory, GetPlants } from './api/api'
-import React, { useEffect, useState } from 'react'
+import { GetHistory, GetPlants, GetPresets } from './api/api'
+import React, { use, useEffect, useState } from 'react'
 import { usePlant } from "./context/PlantContext";
 
+interface Preset {
+  Id: number
+  Moist: number
+  Temp: number
+  AirQuality: number
+  interval: number
+}
 
 export default function Home() {
   const [history, setHistory] = useState<any[]>([])
   const [plants, setPlants] = useState<any[]>([])
   const { currentPlant, setCurrentPlant } = usePlant()
+  const [currentPreset, setCurrentPreset] = useState<Preset | null>(null);
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -25,18 +33,34 @@ export default function Home() {
     
     const Plantdata = await GetPlants(parseInt(userId || "0"))
     if (Plantdata) {
-    setPlants(Plantdata.recordsets[0])
-      setCurrentPlant({name:Plantdata.recordsets[0][0].NamePlant, id:Plantdata.recordsets[0][0].Id});
+      setPlants(Plantdata.recordsets[0])
+      if (currentPlant === undefined || currentPlant === null) {
+      setCurrentPlant({name:Plantdata.recordsets[0][0].NamePlant, id:Plantdata.recordsets[0][0].Id, presetId:Plantdata.recordsets[0][0].PresetId});
+      }
     }
+      
+
     //const Historydata = await GetHistory(parseInt(Plantdata.recordsets[0][0].Id || "0"))
     const Historydata = await GetHistory(parseInt("1"))
     if (Historydata) {
       setHistory(Historydata.recordsets[0][Historydata.recordsets.length - 1])
-      console.log("history",Historydata.recordsets[0][Historydata.recordsets.length - 1])
-    }
-    }
+    }}
     fetchPlants()
   }, [])
+
+  useEffect(() => {
+    if (!currentPlant?.presetId) return; 
+
+    const fetchPreset = async () => {
+      const presetData = await GetPresets(currentPlant.presetId);
+      if (presetData && presetData.length > 0) {
+        setCurrentPreset(presetData[0]);
+        console.log("presetData", presetData[0]);
+      }
+    };
+
+    fetchPreset();
+  }, [currentPlant]);
 
   return (
     <div className="flex justify-between items-between content-between bg-lime-700/40 py-8 px-16 mt-2 rounded-b-4xl h-160 gap-8">
@@ -48,7 +72,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center justify-center">
                   <IoIosWater color="blue" size={"64"}/>
-                  <h1 className="text-stone-900 text-center">{parseFloat(history["Moist"]).toFixed(2)||0}</h1>
+                  <h1 className="text-stone-900 text-center">{parseFloat(history["Moist"]).toFixed(2)||0}/{currentPreset?.Moist}</h1>
                 </div>
 
                 <h4 className='text-xl text-stone-900 font-medium'>Wilgotność gleby</h4>
@@ -59,7 +83,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center justify-center">
                   <FaTemperatureQuarter color="black" size={"64"}/>
-                  <h3 className="text-stone-900 text-center">{history["Temp"]||0}</h3>
+                  <h3 className="text-stone-900 text-center">{history["Temp"]||0}/{currentPreset?.Temp}</h3>
                 </div>
 
                 <h4 className='text-xl text-stone-900 font-medium'>Temperatura</h4>
@@ -69,7 +93,7 @@ export default function Home() {
             <AppButton className="w-40">
               <div>
                 <div className="flex items-center justify-center">
-                  <h3 className="text-stone-900 text-center">{history["AirQuality"]||0}</h3>
+                  <h3 className="text-stone-900 text-center">{history["AirQuality"]||0}/{currentPreset?.AirQuality}</h3>
                 </div>
                 <h4 className='text-xl text-stone-900 font-medium'>Jakość powietrza</h4>
               </div>
@@ -81,35 +105,21 @@ export default function Home() {
             <AppButton className="flex-column justify-start align-start px-12 py-2">
               <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
               <div className="flex gap-4 justify-start items-start"> 
-                <input type="text" className="bg-white w-12 rounded-xl"/>
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>dni</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.Interval/3600)} dni</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <input type="text" className="bg-white w-12 rounded-xl"/>
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>godzin</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.Interval/60)} godzin</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <input type="text" className="bg-white w-12 rounded-xl"/>
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>minut</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval} minut</h3>
               </div>
             </AppButton>
           </div>
 
           <div className="w-full mt-10">
             <AppButton className="flex-column justify-start align-start px-12 py-2">
-              <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
-              <div className="flex gap-4 justify-start items-start"> 
-                <input type="text" className="bg-white w-12 rounded-xl"/>
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>dni</h3>
-              </div>
-              <div className="flex gap-4 justify-start items-start"> 
-                <input type="text" className="bg-white w-12 rounded-xl"/>
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>godzin</h3>
-              </div>
-              <div className="flex gap-4 justify-start items-start"> 
-                <input type="text" className="bg-white w-12 rounded-xl"/>
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>minut</h3>
-              </div>
+              <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlej</h3>
+              
             </AppButton>
           </div>
         </div>
@@ -122,7 +132,7 @@ export default function Home() {
         <div id="plantItems" className="flex flex-col justify-between h-4/5">  
           <div className="grid grid-cols-3 gap-8 h-4/5">
             {plants.slice(0, 5).map((plant) => (
-              <PlantItem key={plant.Id} label={plant.NamePlant} id={plant.Id}/>
+              <PlantItem key={plant.Id} label={plant.NamePlant} id={plant.Id} presetId={plant.PresetId} />
             ))}
             <AppButton className="flex justify-center items-center w-48 h-48"><Link href="/myplants" className='text-2xl text-stone-900 font-medium text-center'>Zobacz więcej</Link></AppButton>
           </div>
@@ -132,13 +142,11 @@ export default function Home() {
   );
 }
 
-
 //TODO
-//opcja dodawania rośliny i presetów
-//udynamizowanie danych z frontendu danymi z backendu
 //dodaj zmianę pola interval
 //dodaj przycisk podlewania 
+//opcja edytowania roślin
+//interwał nie działa
 
-//rejestracja od front endu
 //zakładka zarządzania użytkownikami
 //mobilny widok
