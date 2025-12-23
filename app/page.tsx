@@ -6,7 +6,7 @@ import { FaTemperatureQuarter,FaSun } from "react-icons/fa6";
 import Link from 'next/link'
 import { FaCheck } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import { GetHistory, GetPlants, GetPresets } from './api/api'
+import { GetHistory, GetPlants, GetPresets, UpdateWatering } from './api/api'
 import React, { use, useEffect, useState } from 'react'
 import { usePlant } from "./context/PlantContext";
 
@@ -105,10 +105,10 @@ export default function Home() {
             <AppButton className="flex-column justify-start align-start px-12 py-2">
               <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.Interval/3600)} dni</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval/3600} dni</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.Interval/60)} godzin</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval/60} godzin</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
                 <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval} minut</h3>
@@ -117,9 +117,8 @@ export default function Home() {
           </div>
 
           <div className="w-full mt-10">
-            <AppButton className="flex-column justify-start align-start px-12 py-2">
+            <AppButton className="flex-column justify-start align-start px-12 py-2" onClick={() => UpdateWatering()}>
               <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlej</h3>
-              
             </AppButton>
           </div>
         </div>
@@ -143,9 +142,8 @@ export default function Home() {
 }
 
 //TODO
-//dodaj zmianę pola interval
 //dodaj przycisk podlewania 
-//opcja edytowania roślin
+//opcja edytowania roślin i jej presetu
 //interwał nie działa
 
 //zakładka zarządzania użytkownikami

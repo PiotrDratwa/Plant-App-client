@@ -63,35 +63,35 @@ export default function MyPlants() {
             <div className="flex flex-col justify-center align-center gap-8 px-12 py-2 text-black text-3xl px-4 py-4 rounded-3xl bg-green-800/60 hover:bg-green-700/60 cursor-pointer transition">
                 <div>
                 <h3 className='text-2xl text-stone-900 font-medium text-center'>Nazwa</h3>
-                <input type="text" className="bg-white w-80 rounded-xl mb-4" onChange={(e) => setPlantName(e.target.value)}/>
+                <input type="text" className="bg-white w-80 rounded-xl mb-4" onChange={(e) => setPlantName(e.target.value)} value="plant"/>
                 </div>
                 <div>
                   <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
                   <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalDays(parseInt(e.target.value) || 0)}/>
+                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalDays(parseInt(e.target.value) || 0)} value="0"/>
                     <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>dni</h3>
                   </div>
                   <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalHours(parseInt(e.target.value) || 0)}/>
+                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalHours(parseInt(e.target.value) || 0)} value="0"/>
                     <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>godzin</h3>
                   </div>
                   <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalMinutes(parseInt(e.target.value) || 0)}/>
+                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalMinutes(parseInt(e.target.value) || 0)} value="0"/>
                     <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>minut</h3>
                   </div>
                 </div>
                   <div>
                   <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Idealne wartości</h3>
                   <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setMoist(parseInt(e.target.value) || 0)}/>
+                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setMoist(parseInt(e.target.value) || 0)} value="0"/>
                     <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Wilgotność gleby</h3>
                   </div>
                   <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setTemp(parseInt(e.target.value) || 0)}/>
+                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setTemp(parseInt(e.target.value) || 0)} value="0"/>
                     <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Temperatura </h3>
                   </div>
                   <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setAirQuality(parseInt(e.target.value) || 0)}/>
+                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setAirQuality(parseInt(e.target.value) || 0)} value="0"/>
                     <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Jakość powietrza</h3>
                   </div>
                 </div>
@@ -102,7 +102,8 @@ export default function MyPlants() {
                       temp,
                       moist,
                       airQuality,
-                      parseInt(userID.toString() || "0")
+                      parseInt(userID.toString() || "0"),
+                      minutes
                     );
 
                     PostPlants(userID, plantName, presetId);

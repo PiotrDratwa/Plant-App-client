@@ -183,7 +183,8 @@ export async function PostPreset(
   Temp: number,
   Moist: number,
   AirQuality: number,
-  UserId: number
+  UserId: number,
+  IntervalMinutes: number,
 ) {
   try {
     const API_URL = 'http://localhost:3000';
@@ -196,6 +197,7 @@ export async function PostPreset(
         Moist,
         AirQuality,
         UserId,
+        IntervalMinutes
       }),
     });
 
@@ -218,7 +220,7 @@ export async function UpdatePreset(
   Moist: number,
   AirQuality: number
 ) {
-    const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';
   try {
     const res = await fetch(`${API_URL}/preset`, {
       method: 'PUT',
@@ -244,7 +246,7 @@ export async function UpdatePreset(
 }
 
 export async function DeletePreset(Id: number) {
-    const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';
   try {
     const res = await fetch(`${API_URL}/preset`, {
       method: 'DELETE',
@@ -265,7 +267,7 @@ export async function DeletePreset(Id: number) {
 
 
 export async function GetHistory(PlantId: number) {
-    const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';
   try {
     const res = await fetch(`${API_URL}/history?PlantId=${PlantId}`);
 
@@ -281,18 +283,21 @@ export async function GetHistory(PlantId: number) {
 }
 
 
-export async function GetTest() {
-    const API_URL = 'http://localhost:3000';
-  try {
-    const res = await fetch(`${API_URL}/test`);
+export async function UpdateWatering(){
+  const API_URL = 'http://localhost:3000';
+  try{
+    const res = await fetch(`${API_URL}/preset`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    })
 
     if (!res.ok) {
-      console.log('Błąd testu');
+      console.log('Błąd edycji presetu');
       return null;
     }
 
-    return await res.json();
-  } catch (err) {
-    console.error(err);
+    return await res.text();
+  } catch (err){
+    console.error(err)
   }
 }
