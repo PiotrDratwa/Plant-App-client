@@ -15,7 +15,7 @@ interface Preset {
   Moist: number
   Temp: number
   AirQuality: number
-  interval: number
+  WateringIntervalMinutes: number
 }
 
 export default function Home() {
@@ -23,6 +23,7 @@ export default function Home() {
   const [plants, setPlants] = useState<any[]>([])
   const { currentPlant, setCurrentPlant } = usePlant()
   const [currentPreset, setCurrentPreset] = useState<Preset | null>(null);
+  console.log("CURRENT PLANT HOMEPAGE", currentPlant)
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -105,20 +106,22 @@ export default function Home() {
             <AppButton className="flex-column justify-start align-start px-12 py-2">
               <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval/3600} dni</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.WateringIntervalMinutes/1440)} dni</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval/60} godzin</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt((currentPreset?.WateringIntervalMinutes/60)%24)} godzin</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.Interval} minut</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.WateringIntervalMinutes%60} minut</h3>
               </div>
             </AppButton>
           </div>
 
           <div className="w-full mt-10">
-            <AppButton className="flex-column justify-start align-start px-12 py-2" onClick={() => UpdateWatering()}>
-              <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlej</h3>
+            <AppButton className="border-xl hover:bg-green-800/60 size-56 flex justify-center items-center" onClick={() => UpdateWatering()}>
+              <div className="flex flex-col justify-center items-center bg-lime-600 p-4 rounded-full hover:bg-lime-500 transition size-40">
+                <h3 className='text-2xl text-stone-900 font-medium text-center'>Podlej</h3>
+              </div>
             </AppButton>
           </div>
         </div>
@@ -142,9 +145,7 @@ export default function Home() {
 }
 
 //TODO
-//dodaj przycisk podlewania 
-//opcja edytowania roślin i jej presetu
-//interwał nie działa
 
+//zmiany mają być widoczne bez odświeżania strony
 //zakładka zarządzania użytkownikami
 //mobilny widok

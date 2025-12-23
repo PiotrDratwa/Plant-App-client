@@ -110,6 +110,7 @@ export async function PostPlants(
 }
 
 export async function UpdatePlant(
+  PlantId: number,
   UserId: number,
   NamePlant: string,
 ) {
@@ -119,6 +120,7 @@ export async function UpdatePlant(
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        PlantId,
         UserId,
         NamePlant,
       }),
@@ -218,7 +220,8 @@ export async function UpdatePreset(
   NamePreset: string,
   Temp: number,
   Moist: number,
-  AirQuality: number
+  AirQuality: number,
+  IntervalMinutes: number
 ) {
   const API_URL = 'http://localhost:3000';
   try {
@@ -231,6 +234,7 @@ export async function UpdatePreset(
         Temp,
         Moist,
         AirQuality,
+        IntervalMinutes,
       }),
     });
 
