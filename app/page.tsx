@@ -73,7 +73,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center justify-center">
                   <IoIosWater color="blue" size={"64"}/>
-                  <h1 className="text-stone-900 text-center">{parseFloat(history["Moist"]).toFixed(2)||0}/{currentPreset?.Moist}</h1>
+                  <h1 className="text-stone-900 text-center">{history["Moist"] ? parseFloat(history["Moist"]).toFixed(2):0}/{currentPreset?.Moist}</h1>
                 </div>
 
                 <h4 className='text-xl text-stone-900 font-medium'>Wilgotność gleby</h4>
@@ -106,13 +106,13 @@ export default function Home() {
             <AppButton className="flex-column justify-start align-start px-12 py-2">
               <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.WateringIntervalMinutes/1440)} dni</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt(currentPreset?.WateringIntervalMinutes/1440)||0} dni</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt((currentPreset?.WateringIntervalMinutes/60)%24)} godzin</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{parseInt((currentPreset?.WateringIntervalMinutes/60)%24)||0} godzin</h3>
               </div>
               <div className="flex gap-4 justify-start items-start"> 
-                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.WateringIntervalMinutes%60} minut</h3>
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>{currentPreset?.WateringIntervalMinutes%60||0} minut</h3>
               </div>
             </AppButton>
           </div>

@@ -1,6 +1,6 @@
 
 export async function handleLogin(UserName: string, Password: string){
-    const API_URL = 'http://localhost:3000';
+    const API_URL = 'http://localhost:3000';;
 
     try {
         const res = await fetch(`${API_URL}/login`, {
@@ -21,7 +21,7 @@ export async function handleLogin(UserName: string, Password: string){
         return;
         }
 
-        console.log('Logowanie udane');
+        console.log('Logowanie udane')
         const data = await res.json();
         console.log(data);
     } catch (err) {
@@ -33,7 +33,7 @@ export async function handleLogin(UserName: string, Password: string){
 
 
 export async function GetPlants(UserId: number) {
-  const API_URL = 'http://localhost:3000'
+  const API_URL = 'http://localhost:3000';
 
   try {
     const res = await fetch(`${API_URL}/plants?UserId=${UserId}`, {
@@ -86,7 +86,7 @@ export async function PostPlants(
   NamePlant: string,
   PresetId?: number
 ) {
-    const API_URL = 'http://localhost:3000';
+    const API_URL = 'http://localhost:3000';;
   try {
     const res = await fetch(`${API_URL}/plants`, {
       method: 'POST',
@@ -114,7 +114,7 @@ export async function UpdatePlant(
   UserId: number,
   NamePlant: string,
 ) {
-    const API_URL = 'http://localhost:3000';
+    const API_URL = 'http://localhost:3000';;
   try {
     const res = await fetch(`${API_URL}/plants`, {
       method: 'PUT',
@@ -139,7 +139,7 @@ export async function UpdatePlant(
 
 export async function DeletePlant(Id: number, NamePlant: string) {
   try {
-    const API_URL = 'http://localhost:3000';
+    const API_URL = 'http://localhost:3000';;
     const res = await fetch(`${API_URL}/plants`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
@@ -163,7 +163,7 @@ export async function DeletePlant(Id: number, NamePlant: string) {
 
 export async function GetPresets(Id: number) {
   try {
-    const API_URL = 'http://localhost:3000';
+    const API_URL = 'http://localhost:3000';;
     const res = await fetch(`${API_URL}/preset?Id=${Id}`, {
       method: 'GET',
     });
@@ -189,7 +189,7 @@ export async function PostPreset(
   IntervalMinutes: number,
 ) {
   try {
-    const API_URL = 'http://localhost:3000';
+    const API_URL = 'http://localhost:3000';;
     const res = await fetch(`${API_URL}/preset`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -223,7 +223,7 @@ export async function UpdatePreset(
   AirQuality: number,
   IntervalMinutes: number
 ) {
-  const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';;
   try {
     const res = await fetch(`${API_URL}/preset`, {
       method: 'PUT',
@@ -250,7 +250,7 @@ export async function UpdatePreset(
 }
 
 export async function DeletePreset(Id: number) {
-  const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';;
   try {
     const res = await fetch(`${API_URL}/preset`, {
       method: 'DELETE',
@@ -271,7 +271,7 @@ export async function DeletePreset(Id: number) {
 
 
 export async function GetHistory(PlantId: number) {
-  const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';;
   try {
     const res = await fetch(`${API_URL}/history?PlantId=${PlantId}`);
 
@@ -288,7 +288,7 @@ export async function GetHistory(PlantId: number) {
 
 
 export async function UpdateWatering(){
-  const API_URL = 'http://localhost:3000';
+  const API_URL = 'http://localhost:3000';;
   try{
     const res = await fetch(`${API_URL}/preset`, {
       method: 'PUT',
