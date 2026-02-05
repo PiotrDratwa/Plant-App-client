@@ -290,7 +290,8 @@ export async function GetHistory(PlantId: number) {
 export async function UpdateWatering(){
   const API_URL = 'http://localhost:3000';;
   try{
-    const res = await fetch(`${API_URL}/preset`, {
+    console.log("podlewam 1")
+    const res = await fetch(`${API_URL}/watering`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
     })

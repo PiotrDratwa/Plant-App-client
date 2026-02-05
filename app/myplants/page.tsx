@@ -8,7 +8,6 @@ import { usePlant } from "../context/PlantContext";
 import { CiSquarePlus } from "react-icons/ci";
 import { CiEdit } from "react-icons/ci";
 
-
 interface Preset {
   Id: number
   Moist: number
@@ -23,42 +22,44 @@ function getCookieValue(name: string) {
 }
 
 export default function MyPlants() {
-  const [plantName, setPlantName] = useState("");
-  const [temp, setTemp] = useState(0);
-  const [moist, setMoist] = useState(0);
-  const [airQuality, setAirQuality] = useState(0);
-  const [intervalDays, setIntervalDays] = useState(0);
-  const [intervalHours, setIntervalHours] = useState(0);
-  const [intervalMinutes, setIntervalMinutes] = useState(0);
+  const [plantName, setPlantName] = useState<string | null>(null);
+
+  const [temp, setTemp] = useState<number | null>(null);
+  const [moist, setMoist] = useState<number | null>(null);
+  const [airQuality, setAirQuality] = useState<number | null>(null);
+
+  const [intervalDays, setIntervalDays] = useState<number | null>(null);
+  const [intervalHours, setIntervalHours] = useState<number | null>(null);
+  const [intervalMinutes, setIntervalMinutes] = useState<number | null>(null);
+
   const [userID, setUserID] = useState<number | null>(null);
   const [plants, setPlants] = useState<any[]>([]);
   const { currentPlant, setCurrentPlant } = usePlant();
   const [create, setCreate] = useState<boolean>(true);
   const [currentPreset, setCurrentPreset] = useState<Preset | null>(null);
-  
 
   useEffect(() => {
-  const uid = getCookieValue("userID");
+    const uid = getCookieValue("userID");
     if (uid) {
       setUserID(parseInt(uid));
     }
   }, []);
 
-    useEffect(() => {
-      if (!currentPlant?.presetId) {
-        setCurrentPreset({Id: 0, Moist: 0, Temp: 0, AirQuality: 0, WateringIntervalMinutes: 0});
-        return;
-      }; 
-  
-      const fetchPreset = async () => {
-        const presetData = await GetPresets(currentPlant.presetId);
-        if (presetData && presetData.length > 0) {
-          setCurrentPreset(presetData[0]);
-        }
-      };
-  
-      fetchPreset();
-    }, [currentPlant]);
+  useEffect(() => {
+    if (!currentPlant?.presetId) {
+      setCurrentPreset({ Id: 0, Moist: 0, Temp: 0, AirQuality: 0, WateringIntervalMinutes: 0 });
+      return;
+    }
+
+    const fetchPreset = async () => {
+      const presetData = await GetPresets(currentPlant.presetId);
+      if (presetData && presetData.length > 0) {
+        setCurrentPreset(presetData[0]);
+      }
+    };
+
+    fetchPreset();
+  }, [currentPlant]);
 
   useEffect(() => {
     if (!userID) return;
@@ -85,86 +86,159 @@ export default function MyPlants() {
   return (
     <div className="bg-lime-700/40 py-8 px-16 mt-2 rounded-b-4xl gap-8">
       <div className="mb-8">
-          <h3 className="text-2xl text-stone-900 font-medium text-center pb-4">{create ? "Dodaj roślinę" : "Edytuj roślinę"}</h3>
-          <div className="flex justify-center items-center">
-            <div className="flex flex-col justify-center align-center gap-8 px-12 py-2 text-black text-3xl px-4 py-4 rounded-3xl bg-green-800/60 hover:bg-green-700/60 cursor-pointer transition">
-                <div>
-                <div className="flex items-center justify-center gap-8">
-                  <div className="bg-green-800 p-0.5 hover:bg-green-600 transition" onClick={() => setCreate(true)}><CiSquarePlus size={32}/></div> 
-                  <div className="bg-green-800 p-0.5 hover:bg-green-600 transition" onClick={() => setCreate(false)}><CiEdit  size={32}/></div>
-                  </div>
-                <h3 className='text-2xl text-stone-900 font-medium text-center'>Nazwa</h3>
-                <input type="text" className="bg-white w-80 rounded-xl mb-4" onChange={(e) => setPlantName(e.target.value)} placeholder={create ? "" : currentPlant?.name}/>
-                </div>
-                <div>
-                  <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
-                  <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalDays(parseInt(e.target.value) || 0)} placeholder={create ? "" : parseInt(currentPreset?.WateringIntervalMinutes/1440)}/>
-                    <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>dni</h3>
-                  </div>
-                  <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalHours(parseInt(e.target.value) || 0)} placeholder={create ? "" : parseInt((currentPreset?.WateringIntervalMinutes/60)%24)}/>
-                    <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>godzin</h3>
-                  </div>
-                  <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setIntervalMinutes(parseInt(e.target.value) || 0)} placeholder={create ? "" : currentPreset?.WateringIntervalMinutes%60}/>
-                    <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>minut</h3>
-                  </div>
-                </div>
-                  <div>
-                  <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Idealne wartości</h3>
-                  <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setMoist(parseInt(e.target.value) || 0)} placeholder={create ? "" : currentPreset?.Moist}/>
-                    <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Wilgotność gleby</h3>
-                  </div>
-                  <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setTemp(parseInt(e.target.value) || 0)} placeholder={create ? "" : currentPreset?.Temp}/>
-                    <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Temperatura </h3>
-                  </div>
-                  <div className="flex gap-4 justify-start items-start"> 
-                    <input type="text" className="bg-white w-12 rounded-xl" onChange={(e) => setAirQuality(parseInt(e.target.value) || 0)} placeholder={create ? "" : currentPreset?.AirQuality}/>
-                    <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Jakość powietrza</h3>
-                  </div>
-                </div>
-                {create ? <AppButton onClick={async () => {
-                    const minutes = intervalDays * 24 * 60 + intervalHours * 60 + intervalMinutes;
-                    const presetId = await PostPreset(
-                      plantName + "_preset",
-                      temp,
-                      moist,
-                      airQuality,
-                      parseInt(userID.toString() || "0"),
-                      minutes
-                    );
+        <h3 className="text-2xl text-stone-900 font-medium text-center pb-4">
+          {create ? "Dodaj roślinę" : "Edytuj roślinę"}
+        </h3>
 
-                    PostPlants(userID, plantName, presetId);
-                    }}>
-                  Dodaj roślinę
-                </AppButton>: 
-                <AppButton onClick={async () => {
-                    const minutes = intervalDays * 24 * 60 + intervalHours * 60 + intervalMinutes;
-                    const presetId = await UpdatePreset(
-                      currentPreset?.Id || 0,
-                      plantName + "_preset",
-                      temp,
-                      moist,
-                      airQuality,
-                      minutes
-                    );
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col justify-center align-center gap-8 px-12 py-2 text-black text-3xl px-4 py-4 rounded-3xl bg-green-800/60 hover:bg-green-700/60 cursor-pointer transition">
+            <div>
+              <div className="flex items-center justify-center gap-8">
+                <div className="bg-green-800 p-0.5 hover:bg-green-600 transition" onClick={() => setCreate(true)}>
+                  <CiSquarePlus size={32} />
+                </div>
+                <div className="bg-green-800 p-0.5 hover:bg-green-600 transition" onClick={() => setCreate(false)}>
+                  <CiEdit size={32} />
+                </div>
+              </div>
 
-                    console.log("UPDATE PLANT", plantName, currentPlant?.id, minutes);
-                    UpdatePlant(currentPlant?.id || 0, userID, plantName);
-                    }}>
-                  Edytuj roślinę
-                </AppButton>}
+              <h3 className='text-2xl text-stone-900 font-medium text-center'>Nazwa</h3>
+              <input
+                type="text"
+                className="bg-white w-80 rounded-xl mb-4"
+                onChange={(e) =>
+                  setPlantName(e.target.value === "" ? null : e.target.value)
+                }
+                placeholder={create ? "" : currentPlant?.name}
+              />
             </div>
+
+            <div>
+              <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Podlewaj co...</h3>
+
+              <div className="flex gap-4 justify-start items-start">
+                <input
+                  type="text"
+                  className="bg-white w-12 rounded-xl"
+                  onChange={(e) =>
+                    setIntervalDays(e.target.value === "" ? null : parseInt(e.target.value))
+                  }
+                  placeholder={create ? "" : String(Math.floor((currentPreset?.WateringIntervalMinutes ?? 0) / 1440))}
+                />
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>dni</h3>
+              </div>
+
+              <div className="flex gap-4 justify-start items-start">
+                <input
+                  type="text"
+                  className="bg-white w-12 rounded-xl"
+                  onChange={(e) =>
+                    setIntervalHours(e.target.value === "" ? null : parseInt(e.target.value))
+                  }
+                  placeholder={create ? "" : String(Math.floor(((currentPreset?.WateringIntervalMinutes ?? 0) / 60) % 24))}
+                />
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>godzin</h3>
+              </div>
+
+              <div className="flex gap-4 justify-start items-start">
+                <input
+                  type="text"
+                  className="bg-white w-12 rounded-xl"
+                  onChange={(e) =>
+                    setIntervalMinutes(e.target.value === "" ? null : parseInt(e.target.value))
+                  }
+                  placeholder={create ? "" : String((currentPreset?.WateringIntervalMinutes ?? 0) % 60)}
+                />
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>minut</h3>
+              </div>
+            </div>
+
+            <div>
+              <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Idealne wartości</h3>
+
+              <div className="flex gap-4 justify-start items-start">
+                <input
+                  type="text"
+                  className="bg-white w-12 rounded-xl"
+                  onChange={(e) =>
+                    setTemp(e.target.value === "" ? null : parseInt(e.target.value))
+                  }
+                  placeholder={create ? "" : String(currentPreset?.Temp)}
+                />
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Temperatura</h3>
+              </div>
+
+              <div className="flex gap-4 justify-start items-start">
+                <input
+                  type="text"
+                  className="bg-white w-12 rounded-xl"
+                  onChange={(e) =>
+                    setAirQuality(e.target.value === "" ? null : parseInt(e.target.value))
+                  }
+                  placeholder={create ? "" : String(currentPreset?.AirQuality)}
+                />
+                <h3 className='text-2xl text-stone-900 font-medium text-center pb-4'>Jakość powietrza</h3>
+              </div>
+            </div>
+
+            {create ? (
+              <AppButton onClick={async () => {
+                const baseMinutes = currentPreset?.WateringIntervalMinutes ?? 0;
+
+                const days = intervalDays ?? Math.floor(baseMinutes / 1440);
+                const hours = intervalHours ?? Math.floor((baseMinutes / 60) % 24);
+                const mins = intervalMinutes ?? baseMinutes % 60;
+
+                const minutes = days * 1440 + hours * 60 + mins;
+                const finalPlantName = plantName ?? currentPlant?.name ?? "";
+
+                const presetId = await PostPreset(
+                  finalPlantName + "_preset",
+                  temp ?? currentPreset?.Temp ?? 0,
+                  moist ?? currentPreset?.Moist ?? 0,
+                  airQuality ?? currentPreset?.AirQuality ?? 0,
+                  userID ?? 0,
+                  minutes
+                );
+
+                PostPlants(userID, finalPlantName, presetId);
+              }}>
+                Dodaj roślinę
+              </AppButton>
+            ) : (
+              <AppButton onClick={async () => {
+                const baseMinutes = currentPreset?.WateringIntervalMinutes ?? 0;
+
+                const days = intervalDays ?? Math.floor(baseMinutes / 1440);
+                const hours = intervalHours ?? Math.floor((baseMinutes / 60) % 24);
+                const mins = intervalMinutes ?? baseMinutes % 60;
+
+                const minutes = days * 1440 + hours * 60 + mins;
+                const finalPlantName = plantName ?? currentPlant?.name ?? "";
+
+                await UpdatePreset(
+                  currentPreset?.Id ?? 0,
+                  finalPlantName + "_preset",
+                  temp ?? currentPreset?.Temp ?? 0,
+                  moist ?? currentPreset?.Moist ?? 0,
+                  airQuality ?? currentPreset?.AirQuality ?? 0,
+                  minutes
+                );
+
+                UpdatePlant(currentPlant?.id ?? 0, userID, finalPlantName);
+              }}>
+                Edytuj roślinę
+              </AppButton>
+            )}
           </div>
         </div>
-        <div className="grid grid-cols-6 gap-8 h-4/5 justify-items-center">
-          {plants.map((plant) => (
-            <PlantItem key={plant.Id} label={plant.NamePlant} id={plant.Id} presetId={plant.PresetId} />
-          ))}
-        </div>
+      </div>
+
+      <div className="grid grid-cols-6 gap-8 h-4/5 justify-items-center">
+        {plants.map((plant) => (
+          <PlantItem key={plant.Id} label={plant.NamePlant} id={plant.Id} presetId={plant.PresetId} />
+        ))}
+      </div>
     </div>
   );
 }

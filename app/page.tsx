@@ -61,6 +61,8 @@ export default function Home() {
     };
 
     fetchPreset();
+
+
   }, [currentPlant]);
 
   return (
@@ -72,11 +74,8 @@ export default function Home() {
             <AppButton className="w-40">
               <div>
                 <div className="flex items-center justify-center">
-                  <IoIosWater color="blue" size={"64"}/>
-                  <h1 className="text-stone-900 text-center">{history["Moist"] ? parseFloat(history["Moist"]).toFixed(2):0}/{currentPreset?.Moist}</h1>
+                  <h1 className="text-stone-900 text-center">{history["AirQuality"] == 0 ? "gleba jest wilgotna" : "gleba jest sucha"}</h1>
                 </div>
-
-                <h4 className='text-xl text-stone-900 font-medium'>Wilgotność gleby</h4>
               </div>
             </AppButton>
 
@@ -94,9 +93,10 @@ export default function Home() {
             <AppButton className="w-40">
               <div>
                 <div className="flex items-center justify-center">
-                  <h3 className="text-stone-900 text-center">{history["AirQuality"]||0}/{currentPreset?.AirQuality}</h3>
+                  <IoIosWater color="blue" size={"64"}/>
+                  <h1 className="text-stone-900 text-center">{history["Moist"] ? parseFloat(history["Moist"]).toFixed(2):0}/{currentPreset?.AirQuality}</h1>
                 </div>
-                <h4 className='text-xl text-stone-900 font-medium'>Jakość powietrza</h4>
+                <h4 className='text-xl text-stone-900 font-medium'>Wilgotność powietrza</h4>
               </div>
             </AppButton>
           </div>
@@ -125,7 +125,6 @@ export default function Home() {
             </AppButton>
           </div>
         </div>
-          
         </div>
       </div>
       
